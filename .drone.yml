@@ -1,0 +1,22 @@
+kind: pipeline
+name: x86_64
+
+platform:
+  os: linux
+  arch: amd64
+
+clone:
+  depth: 1
+  
+steps:
+  - name: build
+    image: debian:buster
+    environment:
+      BOTTOKEN:
+        from_secret: token
+      USERCHATID:
+        from_secret: chatid
+    commands:
+      - nproc && grep Mem /proc/meminfo && df -hT .
+      - apt-get update -qq && git abootimg clang llvm gcc g++ > /dev/null
+      - ./build.sh --device surya -z
